@@ -89,7 +89,7 @@ pip install -r requirements.txt
 
 ### Installation avec Docker
 
-```bash
+```bash.
 docker-compose up --build
 ```
 

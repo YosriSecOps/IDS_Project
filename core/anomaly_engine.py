@@ -241,4 +241,3 @@ class AnomalyEngine:
                 },
             )
             self.alert_callback(alert)
-

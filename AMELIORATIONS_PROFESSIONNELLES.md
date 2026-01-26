@@ -2,7 +2,7 @@
 
 ## ✅ Résumé des Améliorations
 
-Votre projet IDS a été entièrement analysé et amélioré pour être **professionnel** tout en conservant le **style dark hacker** demandé.
+IDS a été entièrement analysé et amélioré pour être **professionnel** tout en conservant le **style dark hacker** demandé.
 
 ## 🎯 Fonctionnalités Principales Ajoutées
 

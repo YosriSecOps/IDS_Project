@@ -535,7 +535,7 @@ function addAlertToUI(alert) {
     }
     
     const alertDiv = document.createElement('div');
-    alertDiv.className = `alert-item ${severityClass} alert-new`;
+    alertDiv.className = `alert-item ${severityClass}`;
     alertDiv.dataset.alertId = alert.id;
     // Traduire la sévérité
     const severityTranslations = {
@@ -606,10 +606,8 @@ function addAlertToUI(alert) {
     // Update badge
     updateAlertsBadge();
     
-    // Animate
-    if (window.hackerAnimations && window.hackerAnimations.animateNewAlert) {
-        window.hackerAnimations.animateNewAlert(alertDiv);
-    }
+    // Scroll to top to show new alert
+    container.scrollTop = 0;
 }
 
 function showAlertDetail(alert) {

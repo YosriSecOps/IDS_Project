@@ -70,7 +70,7 @@ def parse_packet(packet: Packet) -> Optional[PacketRecord]:
             protocol = "TCP"
             sport = tcp.sport
             dport = tcp.dport
-            flags = _parse_tcp_flags(tcp.flags)
+            flags = _parse_tcp_flags(tcp.flags) # Convertit les bits en texte (ex: "SA")
             if packet.haslayer(Raw):
                 payload = bytes(packet[Raw].load)
                 payload_size = len(payload)
@@ -165,5 +165,3 @@ def _safe_hex_convert(data: bytes, max_length: int = 512) -> str:
     if len(hex_str) > max_length:
         return hex_str[:max_length] + "..."
     return hex_str
-
-

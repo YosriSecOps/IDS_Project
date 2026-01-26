@@ -195,5 +195,3 @@ class AlertManager:
     def send_webhook(self, alert: Alert, webhook_url: str) -> None:
         """Placeholder for webhook alerting."""
         pass
-
-
