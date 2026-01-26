@@ -1,5 +1,9 @@
 # Network Intrusion Detection System (IDS)
 
+**D�velopp� par : Yosri Hamdouni (yosri-trade)**
+
+# Network Intrusion Detection System (IDS)
+
 Un système complet de détection d'intrusion réseau écrit en Python, capable de détecter des attaques basées sur des signatures et des anomalies statistiques.
 
 ## 📋 Table des matières
@@ -359,5 +363,6 @@ Les contributions sont les bienvenues ! Veuillez :
 - [Scapy Documentation](https://scapy.readthedocs.io/)
 - [Scikit-learn IsolationForest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html)
 - [BPF Filter Syntax](https://biot.com/capstats/bpf.html)
+
 
 
