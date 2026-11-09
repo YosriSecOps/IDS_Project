@@ -1,91 +1,103 @@
 # Network Intrusion Detection System (IDS)
 
-**D�velopp� par : Yosri Hamdouni (yosri-trade)**
+**Développé par : Yosri Hamdouni**  
+GitHub : [yosri-trade](https://github.com/yosri-trade)
 
-# Network Intrusion Detection System (IDS)
-
-Un système complet de détection d'intrusion réseau écrit en Python, capable de détecter des attaques basées sur des signatures et des anomalies statistiques.
+Un système de détection d'intrusion réseau (IDS) développé en Python, capable d'identifier des activités suspectes grâce à une détection basée sur des signatures et à l'analyse statistique des anomalies.
 
 ## 📋 Table des matières
 
-- [Vue d'ensemble](#vue-densemble)
-- [Architecture](#architecture)
-- [Installation](#installation)
-- [Utilisation](#utilisation)
-- [Configuration](#configuration)
-- [Tests](#tests)
-- [Docker](#docker)
-- [Sécurité](#sécurité)
-- [Dépannage](#dépannage)
+- [Vue d'ensemble](#-vue-densemble)
+- [Architecture](#️-architecture)
+- [Installation](#-installation)
+- [Utilisation](#-utilisation)
+- [Configuration](#️-configuration)
+- [Tests](#-tests)
+- [Docker](#-docker)
+- [Sécurité](#-sécurité)
+- [Machine Learning](#-machine-learning-optionnel)
+- [Dépannage](#-dépannage)
+- [Licence](#-licence)
+- [Contribution](#-contribution)
+- [Références](#-références)
 
 ## 🎯 Vue d'ensemble
 
 Ce projet implémente un IDS (Intrusion Detection System) avec les fonctionnalités suivantes :
 
-- **Capture de paquets** : Mode live (capture en temps réel) et replay (lecture de fichiers PCAP)
-- **Détection par signatures** : Port scan, SYN flood, ping sweep, ports suspects
-- **Détection d'anomalies** : Statistiques et optionnellement Machine Learning (IsolationForest)
-- **Journalisation structurée** : Logs JSON avec rotation automatique
-- **Alertes en temps réel** : Affichage coloré avec Rich/Colorama
-- **Tests complets** : Suite de tests pytest
+- **Capture de paquets :** capture en temps réel (Live) et lecture de fichiers PCAP (Replay).
+- **Détection par signatures :** détection des scans de ports, SYN Flood, Ping Sweep et ports suspects.
+- **Détection d'anomalies :** analyse statistique du trafic et utilisation optionnelle du Machine Learning avec Isolation Forest.
+- **Journalisation structurée :** génération de logs JSON avec rotation automatique.
+- **Alertes en temps réel :** affichage des alertes avec Rich et Colorama.
+- **Tests automatisés :** suite de tests basée sur pytest.
 
 ## 🏗️ Architecture
 
-```
-┌─────────────────┐
-│   Packet Sniffer│
-│  (Live/Replay)  │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  Packet Parser  │
-│  (Standardize)  │
-└────────┬────────┘
-         │
-         ├──────────────┬──────────────┐
-         ▼              ▼              ▼
-┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-│   Signature  │ │   Anomaly    │ │   Logger     │
-│    Engine    │ │    Engine    │ │  (JSON logs) │
-└──────┬───────┘ └──────┬───────┘ └──────┬───────┘
-       │                │                 │
-       └────────┬───────┴─────────────────┘
-                ▼
-         ┌──────────────┐
-         │ Alert Manager│
-         │  (Display)    │
-         └──────────────┘
+```text
+              ┌──────────────────────┐
+              │    Packet Sniffer    │
+              │    (Live / Replay)   │
+              └──────────┬───────────┘
+                         │
+                         ▼
+              ┌──────────────────────┐
+              │    Packet Parser     │
+              │    (Normalization)   │
+              └──────────┬───────────┘
+                         │
+             ┌───────────┼───────────┐
+             ▼           ▼           ▼
+      ┌────────────┐ ┌──────────┐ ┌──────────┐
+      │ Signature  │ │ Anomaly  │ │  Logger  │
+      │  Engine    │ │  Engine  │ │   JSON   │
+      └──────┬─────┘ └────┬─────┘ └────┬─────┘
+             │            │            │
+             └────────────┼────────────┘
+                          │
+                          ▼
+              ┌──────────────────────┐
+              │    Alert Manager     │
+              │      (Display)       │
+              └──────────────────────┘
 ```
 
 ### Modules principaux
 
-- **core/sniffer.py** : Capture de paquets réseau
-- **core/packet_parser.py** : Parsing et normalisation des paquets
-- **core/signature_engine.py** : Détection basée sur des règles de signatures
-- **core/anomaly_engine.py** : Détection d'anomalies statistiques et ML
-- **core/logger.py** : Journalisation structurée JSON
-- **core/alert.py** : Gestion et affichage des alertes
-- **cli/interface.py** : Interface en ligne de commande
-- **main.py** : Point d'entrée principal
+| Module | Description |
+|---|---|
+| `core/sniffer.py` | Capture des paquets réseau |
+| `core/packet_parser.py` | Analyse et normalisation des paquets |
+| `core/signature_engine.py` | Détection basée sur des signatures |
+| `core/anomaly_engine.py` | Détection statistique et Machine Learning |
+| `core/logger.py` | Journalisation structurée au format JSON |
+| `core/alert.py` | Gestion et affichage des alertes |
+| `cli/interface.py` | Interface en ligne de commande |
+| `main.py` | Point d'entrée principal |
 
 ## 📦 Installation
 
 ### Prérequis
 
-- Python 3.10+
-- pip
-- Sur Linux : privilèges root pour la capture live (ou utiliser le mode replay)
+- Python 3.10 ou version supérieure.
+- pip.
+- Sur Linux : privilèges administrateur pour la capture réseau en temps réel.
+- Docker et Docker Compose (facultatifs).
 
 ### Installation avec pip
 
 ```bash
-# Cloner ou télécharger le projet
+# Accéder au répertoire du projet
 cd IDS_Project
 
-# Créer un environnement virtuel (recommandé)
+# Créer un environnement virtuel
 python -m venv venv
-source venv/bin/activate  # Sur Windows: venv\Scripts\activate
+
+# Activer l'environnement virtuel
+source venv/bin/activate
+
+# Sur Windows :
+# venv\Scripts\activate
 
 # Installer les dépendances
 pip install -r requirements.txt
@@ -93,99 +105,111 @@ pip install -r requirements.txt
 
 ### Installation avec Docker
 
-```bash.
+```bash
 docker-compose up --build
 ```
 
 ## 🚀 Utilisation
 
-### Générer un fichier PCAP d'exemple
+### 1. Générer un fichier PCAP d'exemple
 
 ```bash
-python tools/pcap_generator.py --output data/pcap_samples/sample_traffic.pcap
+python tools/pcap_generator.py \
+    --output data/pcap_samples/sample_traffic.pcap
 ```
 
-### Démarrer l'IDS en mode replay
+### 2. Démarrer l'IDS en mode Replay
 
 ```bash
-python main.py --start --mode replay --pcap data/pcap_samples/sample_traffic.pcap
+python main.py --start \
+    --mode replay \
+    --pcap data/pcap_samples/sample_traffic.pcap
 ```
 
-### Démarrer l'IDS en mode live (nécessite privilèges)
+### 3. Démarrer l'IDS en mode Live
+
+Cette fonctionnalité nécessite les privilèges appropriés et une interface réseau autorisée.
 
 ```bash
 sudo python main.py --start --mode live --interface eth0
 ```
 
-### Afficher les statistiques
+### 4. Afficher les statistiques
 
 ```bash
 python main.py --stats
 ```
 
-### Afficher les alertes récentes
+### 5. Afficher les alertes récentes
 
 ```bash
 python main.py --show-alerts --tail 10
 ```
 
-### Commandes disponibles
+### 6. Afficher l'aide
 
 ```bash
 python main.py --help
 ```
 
-Options principales :
-- `--start` : Démarrer l'IDS
-- `--mode {live,replay}` : Mode de capture
-- `--interface IFACE` : Interface réseau (mode live)
-- `--pcap PATH` : Fichier PCAP (mode replay)
-- `--stats` : Afficher les statistiques
-- `--show-alerts [--tail N]` : Afficher les alertes
-- `--config PATH` : Fichier de configuration personnalisé
-- `--dry-run` : Valider la configuration et quitter
-- `--version` : Afficher la version
+### Commandes disponibles
+
+| Option | Description |
+|---|---|
+| `--start` | Démarrer le système IDS |
+| `--mode {live,replay}` | Choisir le mode de capture |
+| `--interface IFACE` | Spécifier l'interface réseau |
+| `--pcap PATH` | Spécifier le fichier PCAP |
+| `--stats` | Afficher les statistiques |
+| `--show-alerts` | Afficher les alertes |
+| `--tail N` | Limiter le nombre d'alertes affichées |
+| `--config PATH` | Charger un fichier de configuration personnalisé |
+| `--dry-run` | Vérifier la configuration sans démarrer l'IDS |
+| `--version` | Afficher la version |
 
 ## ⚙️ Configuration
 
-Le fichier `config.yaml` contient toute la configuration :
+Le fichier `config.yaml` permet de personnaliser le comportement du système.
 
 ```yaml
 capture:
-  mode: replay  # live ou replay
+  mode: replay
   interface: eth0
   pcap_path: data/pcap_samples/sample_traffic.pcap
-  bpf_filter: ""  # Filtre BPF optionnel
-  throttle_packets_per_sec: 0  # 0 = pas de limitation
+  bpf_filter: ""
+  throttle_packets_per_sec: 0
 
 signatures:
   portscan:
     enabled: true
-    ports_threshold: 20  # Nombre de ports uniques
-    window_seconds: 10    # Fenêtre temporelle
+    ports_threshold: 20
+    window_seconds: 10
+
   syn_flood:
     enabled: true
     syn_threshold: 200
     window_seconds: 10
+
   ping_sweep:
     enabled: true
     hosts_threshold: 50
     window_seconds: 30
+
   suspicious_ports:
     enabled: true
     ports: [21, 22, 23, 3389, 4444, 6667]
 
 anomaly:
-  packet_rate_threshold: 1000  # paquets/min par source
+  packet_rate_threshold: 1000
   payload_size_threshold_bytes: 10000
-  use_ml: false  # Activer ML (nécessite modèle entraîné)
+  use_ml: false
   model_path: data/datasets/isof_model.joblib
   baseline_path: data/datasets/baseline_train.csv
 
 logging:
   traffic_log: data/logs/traffic.log
   alerts_log: data/logs/alerts.log
-  max_bytes: 10485760  # 10MB
+  max_bytes: 10485760
   backup_count: 7
   level: INFO
 ```
@@ -198,13 +222,13 @@ logging:
 pytest -v
 ```
 
-### Exécuter avec couverture
+### Exécuter les tests avec couverture
 
 ```bash
 pytest --cov=core --cov=cli --cov-report=html
 ```
 
-### Tests individuels
+### Exécuter des tests spécifiques
 
 ```bash
 pytest tests/test_parser.py -v
@@ -215,154 +239,11 @@ pytest tests/test_sniffer.py -v
 
 ## 🐳 Docker
 
-### Construire l'image
+### Construire l'image Docker
 
 ```bash
 make docker-build
-# ou
-docker build -t ids-project .
 ```
 
-### Exécuter avec docker-compose
-
-```bash
-make docker-run
-# ou
-docker-compose up
-```
-
-### Exécuter manuellement
-
-```bash
-docker run -v $(pwd)/data:/app/data ids-project
-```
-
-## 🔒 Sécurité
-
-### Notes importantes
-
-1. **Privilèges requis** : La capture live nécessite des privilèges root/admin
-2. **Réseaux autorisés uniquement** : N'utilisez pas sur des réseaux non autorisés
-3. **Permissions des logs** : Les logs sont restreints au propriétaire (Unix-like)
-4. **Mode replay recommandé** : Pour les tests, utilisez le mode replay
-
-### Simulation d'attaques
-
-Les outils de simulation (`tools/attack_simulator.py`) nécessitent le flag `--force` :
-
-```bash
-python tools/attack_simulator.py --force portscan 192.168.1.5 --start-port 1 --end-port 100
-python tools/attack_simulator.py --force synflood 192.168.1.5 --port 80 --pps 100 --duration 10
-python tools/attack_simulator.py --force pingsweep 192.168.1.0/24
-```
-
-⚠️ **ATTENTION** : Utilisez uniquement sur des réseaux de test autorisés !
-
-## 📊 Machine Learning (Optionnel)
-
-### Générer un dataset d'entraînement
-
-```bash
-python tools/generate_baseline.py
-```
-
-### Entraîner le modèle
-
-Le modèle IsolationForest peut être entraîné automatiquement si `use_ml: true` dans la config et qu'un fichier baseline existe.
-
-### Format du dataset
-
-Le fichier CSV doit contenir les colonnes :
-- `packet_rate` : Taux de paquets par minute
-- `avg_payload_size` : Taille moyenne des payloads
-- `unique_ports` : Nombre de ports uniques
-
-## 🔧 Dépannage
-
-### Erreur de permissions
-
-```
-ERROR: Permission denied. Live capture requires root/admin privileges.
-```
-
-**Solution** : Utilisez `sudo` (Linux) ou exécutez en tant qu'administrateur (Windows), ou utilisez le mode replay.
-
-### Module manquant
-
-```
-ModuleNotFoundError: No module named 'scapy'
-```
-
-**Solution** : Installez les dépendances : `pip install -r requirements.txt`
-
-### Fichier PCAP introuvable
-
-```
-FileNotFoundError: PCAP file not found
-```
-
-**Solution** : Générez un PCAP d'exemple : `python tools/pcap_generator.py`
-
-### Erreur de parsing
-
-Si certains paquets ne sont pas parsés, c'est normal. L'IDS continue de fonctionner et ignore les paquets non-IP.
-
-## 📝 Exemples de sortie
-
-### Alerte de port scan
-
-```json
-{
-  "id": "550e8400-e29b-41d4-a716-446655440000",
-  "ts": "2025-11-21T20:12:01Z",
-  "src": "192.168.1.14",
-  "dst": "multiple",
-  "rule": "PORT_SCAN",
-  "severity": "WARNING",
-  "description": "Port scan detected: 25 ports probed in 8.5s",
-  "meta": {
-    "ports_count": 25,
-    "window_duration": 8.5
-  }
-}
-```
-
-### Log de trafic
-
-```json
-{
-  "timestamp": "2025-11-21T20:12:01.123Z",
-  "packet": {
-    "ts": 1699999999.123,
-    "src": "192.168.1.10",
-    "dst": "192.168.1.5",
-    "protocol": "TCP",
-    "sport": 51514,
-    "dport": 80,
-    "flags": "S",
-    "payload_size": 0,
-    "raw_payload": ""
-  }
-}
-```
-
-## 📄 Licence
-
-MIT License - Voir [LICENSE](LICENSE) pour plus de détails.
-
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! Veuillez :
-1. Fork le projet
-2. Créer une branche pour votre fonctionnalité
-3. Ajouter des tests
-4. Soumettre une pull request
-
-## 📚 Références
-
-- [Scapy Documentation](https://scapy.readthedocs.io/)
-- [Scikit-learn IsolationForest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html)
-- [BPF Filter Syntax](https://biot.com/capstats/bpf.html)
-
-
+Ou directement :
 
